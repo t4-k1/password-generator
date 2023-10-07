@@ -15,32 +15,73 @@
 
 // Assignment Code
 var generateBtn = document.querySelector('#generate')
-var length = 8
 
-// characters
+// define characters into .split array
 var lowerChars = 'abcdefghijklmnopqrstuvwxyz'.split('')
 var upperChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
-var numbers = '1234567890'.split('')
+var numerical = '1234567890'.split('')
 var special = " !\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~".split('')
 
 // button click
 generateBtn.addEventListener("click", function (event) {
-  // var includeLower = confirm("Should your password contain lowercase letters?")
-  writePassword()
-  // console.log(includeLower)
-})
+  // pick password length and make sure it is a whole number
+  var passwordLength = parseInt(prompt('How long should your password be? (Between 8 and 128 characters)'));
+  
+  if (passwordLength >= 8 && passwordLength <= 128) {
+    // make character selections  
+    alert('Select at least one character type to include in your password.');
+    var includeLower = confirm('Should your password include lowercase letters?');
+    var includeUpper = confirm('Should your password include uppercase letters?');
+    var includeNumber = confirm('Should your password include numbers?');
+    var includeSpecial = confirm('Should your password include special characters?');
+    
+    // check to see if one character type is selected
+    if (includeLower || includeUpper || includeNumber || includeSpecial) {
+      var password = generatePassword(passwordLength, includeLower, includeUpper, includeNumber, includeSpecial);
+      writePassword(password);
+      //prompt to select at least one character type
+    } else {
+      alert('Please select at least one character type!');
+    }
+  } else {
+    // prompt to enter a valid number between 8 and 128
+    alert('Please enter a valid number between 8 and 128!'); 
+  }
+  //
+  //  automatically restart function when reaching error??
+  //
+});
 
 // generate password
-function generatePassword() {
-// what did the user select during the prompts?
-// determine how to pull from all selected character sets using length
-// 
-  return "password"
+function generatePassword(passwordLength, includeLower, includeUpper, includeNumber, includeSpecial) {
+  
+  //empty array
+  var selections = ''
+  //concat selections into empty array
+  if (includeLower) {
+    selections = selections.concat(lowerChars);
+  }
+  if (includeUpper) {
+    selections = selections.concat(upperChars);
+  }
+  if (includeNumber) {
+    selections = selections.concat(numerical);
+  }
+  if (includeSpecial) {
+    selections = selections.concat(special);
+  }
+  var password = ''
+  //select random characters from array to generate password
+  for (let i = 0; i < passwordLength; i++) {
+    var randomSelector = Math.floor(Math.random() * selections.length)
+    password += selections[randomSelector]
+}
+return password
 }
 
+
 // Write password to the #password input
-function writePassword() {
-  var password = generatePassword();
+function writePassword(password) {
   var passwordText = document.querySelector("#password");
   passwordText.value = password;
 }
